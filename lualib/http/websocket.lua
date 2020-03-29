@@ -98,7 +98,7 @@ local function read_handshake(self)
         return 400, "host Required"
     end
 
-    if not header["connection"] or header["connection"]:lower() ~= "upgrade" then
+    if not header["connection"] or not header["connection"]:lower():find("upgrade", 1,true) then
         return 400, "Connection must Upgrade"
     end
 
@@ -247,6 +247,8 @@ local function resolve_accept(self)
         if not ok then
             error(s)
         end
+        try_handle(self, "close")
+        return
     end
 
     local header = err
@@ -265,7 +267,7 @@ local function resolve_accept(self)
             try_handle(self, "close", code, reason)
             break
         elseif op == "ping" then
-            write_frame(self, "pong")
+            write_frame(self, "pong", payload_data)
             try_handle(self, "ping")
         elseif op == "pong" then
             try_handle(self, "pong")
@@ -315,7 +317,7 @@ local function _new_client_ws(socket_id, protocol)
             websocket = true,
             close = function ()
                 socket.close(socket_id)
-                tls.closefunc(tls_ctx) 
+                tls.closefunc(tls_ctx)() 
             end,
             read = tls.readfunc(socket_id, tls_ctx),
             write = tls.writefunc(socket_id, tls_ctx),
@@ -361,7 +363,7 @@ local function _new_server_ws(socket_id, handle, protocol)
         obj = {
             close = function ()
                 socket.close(socket_id)
-                tls.closefunc(tls_ctx) 
+                tls.closefunc(tls_ctx)() 
             end,
             read = tls.readfunc(socket_id, tls_ctx),
             write = tls.writefunc(socket_id, tls_ctx),
@@ -446,7 +448,7 @@ function M.read(id)
             _close_websocket(ws_obj)
             return false, payload_data
         elseif op == "ping" then
-            write_frame(ws_obj, "pong")
+            write_frame(ws_obj, "pong", payload_data)
         elseif op ~= "pong" then  -- op is frame, text binary
             if fin and not recv_buf then
                 return payload_data
