@@ -25,10 +25,10 @@ TLS_INC=
 
 # jemalloc
 
-JEMALLOC_STATICLIB := 3rd/jemalloc/lib/libjemalloc_pic.a
-JEMALLOC_INC := 3rd/jemalloc/include/jemalloc
+# JEMALLOC_STATICLIB := 3rd/jemalloc/lib/libjemalloc_pic.a
+# JEMALLOC_INC := 3rd/jemalloc/include/jemalloc
 
-all : jemalloc
+all : 
 	
 .PHONY : jemalloc update3rd
 
