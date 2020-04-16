@@ -2,6 +2,7 @@ include platform.mk
 
 LUA_CLIB_PATH ?= luaclib
 CSERVICE_PATH ?= cservice
+LUA_LIB_PATH ?= lualib
 
 SKYNET_BUILD_PATH ?= .
 
@@ -30,30 +31,30 @@ TLS_INC=
 
 all : 
 	
-.PHONY : jemalloc update3rd
+.PHONY : #jemalloc update3rd
 
-MALLOC_STATICLIB := $(JEMALLOC_STATICLIB)
+# MALLOC_STATICLIB := $(JEMALLOC_STATICLIB)
 
-$(JEMALLOC_STATICLIB) : 3rd/jemalloc/Makefile
-	cd 3rd/jemalloc && $(MAKE) CC=$(CC) 
+# $(JEMALLOC_STATICLIB) : 3rd/jemalloc/Makefile
+# 	cd 3rd/jemalloc && $(MAKE) CC=$(CC) 
 
-3rd/jemalloc/autogen.sh :
-	git submodule update --init
+# 3rd/jemalloc/autogen.sh :
+# 	git submodule update --init
 
-3rd/jemalloc/Makefile : | 3rd/jemalloc/autogen.sh
-	cd 3rd/jemalloc && ./autogen.sh --with-jemalloc-prefix=je_ --enable-prof
+# 3rd/jemalloc/Makefile : | 3rd/jemalloc/autogen.sh
+# 	cd 3rd/jemalloc && ./autogen.sh --with-jemalloc-prefix=je_ --enable-prof
 
-jemalloc : $(MALLOC_STATICLIB)
+# jemalloc : $(MALLOC_STATICLIB)
 
-update3rd :
-	rm -rf 3rd/jemalloc && git submodule update --init
+# update3rd :
+# 	rm -rf 3rd/jemalloc && git submodule update --init
 
 # skynet
 
 CSERVICE = snlua logger gate harbor
 LUA_CLIB = skynet \
   client \
-  bson md5 sproto lpeg $(TLS_MODULE)
+  bson md5 sproto lpeg $(TLS_MODULE) cjson
 
 LUA_CLIB_SKYNET = \
   lua-skynet.c lua-seri.c \
@@ -82,8 +83,8 @@ all : \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
 
-$(SKYNET_BUILD_PATH)/skynet : $(foreach v, $(SKYNET_SRC), skynet-src/$(v)) $(LUA_LIB) $(MALLOC_STATICLIB)
-	$(CC) $(CFLAGS) -o $@ $^ -Iskynet-src -I$(JEMALLOC_INC) $(LDFLAGS) $(EXPORT) $(SKYNET_LIBS) $(SKYNET_DEFINES)
+$(SKYNET_BUILD_PATH)/skynet : $(foreach v, $(SKYNET_SRC), skynet-src/$(v)) $(LUA_LIB)
+	$(CC) $(CFLAGS) -o $@ $^ -Iskynet-src $(LDFLAGS) $(EXPORT) $(SKYNET_LIBS) $(SKYNET_DEFINES)
 
 $(LUA_CLIB_PATH) :
 	mkdir $(LUA_CLIB_PATH)
@@ -119,6 +120,9 @@ $(LUA_CLIB_PATH)/ltls.so : lualib-src/ltls.c | $(LUA_CLIB_PATH)
 $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c 3rd/lpeg/lptree.c 3rd/lpeg/lpvm.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) -I3rd/lpeg $^ -o $@ 
 
+$(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
+	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
+
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 
@@ -127,5 +131,6 @@ ifneq (,$(wildcard 3rd/jemalloc/Makefile))
 	cd 3rd/jemalloc && $(MAKE) clean && rm Makefile
 endif
 	cd 3rd/lua && $(MAKE) clean
+	cd 3rd/lua-cjson && $(MAKE) clean
 	rm -f $(LUA_STATICLIB)
 

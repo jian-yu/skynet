@@ -11,7 +11,7 @@ CFLAGS= -O2 -Wall -Wextra $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
-AR= ar rcu
+AR= ar
 RANLIB= ranlib
 RM= rm -f
 
