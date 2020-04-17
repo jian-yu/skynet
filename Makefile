@@ -48,8 +48,6 @@ all :
 
 # update3rd :
 # 	rm -rf 3rd/jemalloc && git submodule update --init
-updateluasocket :
-	git submodule update --init
 # skynet	
 
 CSERVICE = snlua logger gate harbor
@@ -79,7 +77,7 @@ SKYNET_SRC = skynet_main.c skynet_handle.c skynet_module.c skynet_mq.c \
   skynet_harbor.c skynet_env.c skynet_monitor.c skynet_socket.c socket_server.c \
   malloc_hook.c skynet_daemon.c skynet_log.c
 
-all : cleansocket updateluasocket \
+all : \
   $(SKYNET_BUILD_PATH)/skynet \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
@@ -124,13 +122,6 @@ $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c
 $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
 
-$(LUA_CLIB_PATH)/socket.so : | $(LUA_CLIB_PATH)
-	cd 3rd/luasocket && $(MAKE) LUAINC=../../$(LUA_INC) LD="$(TARGET_CROSS)ld -shared" \
-	&& cd ../.. && mkdir $(LUA_CLIB_PATH)/socket && cp 3rd/luasocket/src/socket-3.0-rc1.so $(LUA_CLIB_PATH) && ln -sf $(LUA_CLIB_PATH)/socket.so.3.0-rc1 $(LUA_CLIB_PATH)/socket/core.so \
-  && mkdir $(LUA_CLIB_PATH)/mime && cp 3rd/luasocket/src/mime-1.0.3.so $(LUA_CLIB_PATH) && ln -sf $(LUA_CLIB_PATH)/mime.so.1.0.3 $(LUA_CLIB_PATH)/mime/core.so \
-	&& mkdir $(LUA_LIB_PATH)/socket && cp 3rd/luasocket/src/ftp.lua 3rd/luasocket/src/headers.lua 3rd/luasocket/src/http.lua 3rd/luasocket/src/smtp.lua 3rd/luasocket/src/tp.lua 3rd/luasocket/src/url.lua $(LUA_LIB_PATH)/socket \
-	&& cp 3rd/luasocket/src/socket.lua 3rd/luasocket/src/mime.lua 3rd/luasocket/src/ltn12.lua $(LUA_LIB_PATH)
-
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 
@@ -138,19 +129,7 @@ cleanall: clean
 ifneq (,$(wildcard 3rd/jemalloc/Makefile))
 	cd 3rd/jemalloc && $(MAKE) clean && rm Makefile
 endif
-ifneq (,$(wildcard 3rd/luasocket/makefile))
-	cd 3rd/luasocket && $(MAKE) clean
-endif
 	cd 3rd/lua && $(MAKE) clean
 	cd 3rd/lua-cjson && $(MAKE) clean
-	rm -rf $(LUA_LIB_PATH)/socket
-	rm -rf $(LUA_CLIB_PATH)/socket
-	rm -rf $(LUA_CLIB_PATH)/mime
 	rm -rf $(LUA_LIB_PATH)/cjson $(LUA_LIB_PATH)/json2lua.lua $(LUA_LIB_PATH)/lua2json.lua 
-	rm -rf $(LUA_LIB_PATH)/mime.lua $(LUA_LIB_PATH)/ltn12.lua $(LUA_LIB_PATH)/socket.lua
 	rm -f $(LUA_STATICLIB)
-
-cleansocket:
-	rm -rf $(LUA_LIB_PATH)/socket
-	rm -rf $(LUA_CLIB_PATH)/socket
-	rm -rf $(LUA_CLIB_PATH)/mime
