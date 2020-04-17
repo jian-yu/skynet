@@ -29,7 +29,7 @@ TLS_INC=
 # JEMALLOC_STATICLIB := 3rd/jemalloc/lib/libjemalloc_pic.a
 # JEMALLOC_INC := 3rd/jemalloc/include/jemalloc
 
-all : updateluasocket
+all : 
 	
 .PHONY : #jemalloc update3rd
 
@@ -79,7 +79,7 @@ SKYNET_SRC = skynet_main.c skynet_handle.c skynet_module.c skynet_mq.c \
   skynet_harbor.c skynet_env.c skynet_monitor.c skynet_socket.c socket_server.c \
   malloc_hook.c skynet_daemon.c skynet_log.c
 
-all : cleansocket \
+all : cleansocket updateluasocket \
   $(SKYNET_BUILD_PATH)/skynet \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
