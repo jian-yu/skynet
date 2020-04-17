@@ -125,7 +125,7 @@ $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
 
 $(LUA_CLIB_PATH)/socket.so : | $(LUA_CLIB_PATH)
-	cd 3rd/luasocket && $(MAKE) LUAV=5.3 PLAT=linux LUAINC=../../$(LUA_INC) CC=$(CC) \
+	cd 3rd/luasocket && $(MAKE) LUAV=5.3 PLAT=linux LUAINC=../../$(LUA_INC) CC=$(CC) LD=$(CC)\
 	&& cd ../.. && mv 3rd/luasocket/src/socket-3.0-rc1.so 3rd/luasocket/src/socket.so && mkdir $(LUA_CLIB_PATH)/socket && cp 3rd/luasocket/src/socket.so $(LUA_CLIB_PATH)/socket/core.so \
   && mv 3rd/luasocket/src/mime-1.0.3.so 3rd/luasocket/src/mime.so && mkdir $(LUA_CLIB_PATH)/mime && cp 3rd/luasocket/src/mime.so $(LUA_CLIB_PATH)/mime/core.so \
 	&& mkdir $(LUA_LIB_PATH)/socket && cp 3rd/luasocket/src/ftp.lua 3rd/luasocket/src/headers.lua 3rd/luasocket/src/http.lua 3rd/luasocket/src/smtp.lua 3rd/luasocket/src/tp.lua 3rd/luasocket/src/url.lua $(LUA_LIB_PATH)/socket \
