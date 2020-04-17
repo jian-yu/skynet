@@ -49,7 +49,7 @@ all :
 # update3rd :
 # 	rm -rf 3rd/jemalloc && git submodule update --init
 updateluasocket :
-	rm -rf 3rd/luasocket && git submodule update --init
+	git submodule update --init
 # skynet	
 
 CSERVICE = snlua logger gate harbor
@@ -139,7 +139,7 @@ ifneq (,$(wildcard 3rd/jemalloc/Makefile))
 	cd 3rd/jemalloc && $(MAKE) clean && rm Makefile
 endif
 ifneq (,$(wildcard 3rd/luasocket/makefile))
-	cd 3rd/luasocket && $(MAKE) clean && rm makefile
+	cd 3rd/luasocket && $(MAKE) clean
 endif
 	cd 3rd/lua && $(MAKE) clean
 	cd 3rd/lua-cjson && $(MAKE) clean
