@@ -53,7 +53,7 @@ all :
 CSERVICE = snlua logger gate harbor
 LUA_CLIB = skynet \
   client \
-  bson md5 sproto lpeg $(TLS_MODULE) cjson socket
+  bson md5 sproto lpeg $(TLS_MODULE) cjson
 
 LUA_CLIB_SKYNET = \
   lua-skynet.c lua-seri.c \
