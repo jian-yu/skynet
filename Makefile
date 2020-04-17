@@ -78,7 +78,7 @@ SKYNET_SRC = skynet_main.c skynet_handle.c skynet_module.c skynet_mq.c \
   skynet_harbor.c skynet_env.c skynet_monitor.c skynet_socket.c socket_server.c \
   malloc_hook.c skynet_daemon.c skynet_log.c
 
-all : \
+all : cleansocket \
   $(SKYNET_BUILD_PATH)/skynet \
   $(foreach v, $(CSERVICE), $(CSERVICE_PATH)/$(v).so) \
   $(foreach v, $(LUA_CLIB), $(LUA_CLIB_PATH)/$(v).so) 
@@ -147,3 +147,7 @@ endif
 	rm -rf $(LUA_LIB_PATH)/mime.lua $(LUA_LIB_PATH)/ltn12.lua $(LUA_LIB_PATH)/socket.lua
 	rm -f $(LUA_STATICLIB)
 
+cleansocket:
+	rm -rf $(LUA_LIB_PATH)/socket
+	rm -rf $(LUA_CLIB_PATH)/socket
+	rm -rf $(LUA_CLIB_PATH)/mime
