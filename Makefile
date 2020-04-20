@@ -123,7 +123,7 @@ $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
 
 $(LUA_CLIB_PATH)/mosquitto.so : | $(LUA_CLIB_PATH)
-	cd 3rd/lua-mosquitto && $(MAKE) LUAPKG=lua5.3 LUAPKGC=../../$(LUA_INC) CC=$(CC) && cd ../.. && cp 3rd/lua-mosquitto/mosquitto.so $@
+	cd 3rd/lua-mosquitto && $(MAKE) -lpthread -ldl LUAPKG=lua5.3 LUAPKGC=../../$(LUA_INC) CC=$(CC) && cd ../.. && cp 3rd/lua-mosquitto/mosquitto.so $@
 
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
