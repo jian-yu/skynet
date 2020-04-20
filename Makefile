@@ -48,13 +48,20 @@ all :
 
 # update3rd :
 # 	rm -rf 3rd/jemalloc && git submodule update --init
+<<<<<<< HEAD
 
+=======
+>>>>>>> cf8ef0042e9187fcb0c24db3fee4744c6ec353ff
 # skynet	
 
 CSERVICE = snlua logger gate harbor
 LUA_CLIB = skynet \
   client \
+<<<<<<< HEAD
   bson md5 sproto lpeg $(TLS_MODULE) cjson mosquitto
+=======
+  bson md5 sproto lpeg $(TLS_MODULE) cjson
+>>>>>>> cf8ef0042e9187fcb0c24db3fee4744c6ec353ff
 
 LUA_CLIB_SKYNET = \
   lua-skynet.c lua-seri.c \
@@ -123,9 +130,12 @@ $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c
 $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
 
+<<<<<<< HEAD
 $(LUA_CLIB_PATH)/mosquitto.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-mosquitto && $(MAKE) LUAPKG=lua5.3 LUAPKGC=../../$(LUA_INC) CC=$(CC) && cd ../.. && cp 3rd/lua-mosquitto/mosquitto.so $@
 
+=======
+>>>>>>> cf8ef0042e9187fcb0c24db3fee4744c6ec353ff
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 
@@ -135,6 +145,11 @@ ifneq (,$(wildcard 3rd/jemalloc/Makefile))
 endif
 	cd 3rd/lua && $(MAKE) clean
 	cd 3rd/lua-cjson && $(MAKE) clean
+<<<<<<< HEAD
 	cd 3rd/lua-mosquitto && $(MAKE) clean
 	rm -rf $(LUA_LIB_PATH)/cjson $(LUA_LIB_PATH)/json2lua.lua $(LUA_LIB_PATH)/lua2json.lua 
 	rm -f $(LUA_STATICLIB)
+=======
+	rm -rf $(LUA_LIB_PATH)/cjson $(LUA_LIB_PATH)/json2lua.lua $(LUA_LIB_PATH)/lua2json.lua 
+	rm -f $(LUA_STATICLIB)
+>>>>>>> cf8ef0042e9187fcb0c24db3fee4744c6ec353ff
