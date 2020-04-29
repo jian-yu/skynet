@@ -189,7 +189,7 @@ CC_freebsd=gcc
 DEF_freebsd=-DLUASOCKET_$(DEBUG) -DUNIX_HAS_SUN_LEN
 CFLAGS_freebsd=$(LUAINC:%=-I%) $(DEF) -Wall -Wshadow -Wextra \
 	-Wimplicit -O2 -ggdb3 -fpic
-LDFLAGS_freebsd=-O -shared -fpic -o 
+LDFLAGS_freebsd=-O -fpic -shared -o 
 LD_freebsd=gcc
 SOCKET_freebsd=usocket.o
 
