@@ -176,7 +176,7 @@ CC_linux=gcc
 DEF_linux=-DLUASOCKET_$(DEBUG)
 CFLAGS_linux=$(LUAINC:%=-I%) $(DEF) -Wall -Wshadow -Wextra \
 	-Wimplicit -O2 -ggdb3 -fpic
-LDFLAGS_linux=-O -shared -o 
+LDFLAGS_linux=-O -fpic -shared -o 
 LD_linux=gcc
 SOCKET_linux=usocket.o
 
