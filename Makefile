@@ -126,8 +126,8 @@ $(LUA_CLIB_PATH)/mosquitto.so : 3rd/lua-mosquitto/lua-mosquitto.c | $(LUA_CLIB_P
 	$(CC) $(CFLAGS) $(SHARED) -I3rd/lua-mosquitto -lmosquitto $^ -o $@ 
 
 $(LUA_CLIB_PATH)/luasocket.so : | $(LUA_CLIB_PATH)
-	cd 3rd/luasocket; $(MAKE) LUAINC_linux=../../$(LUA_INC) && cd ../.. && mkdir $(LUA_CLIB_PATH)/socket && mv 3rd/luasocket/src/socket-3.0-rc1.so $(LUA_CLIB_PATH)/socket/core.so \
-  && mkdir $(LUA_CLIB_PATH)/mime && mv 3rd/luasocket/src/mime-1.0.3.so $(LUA_CLIB_PATH)/mime/core.so \
+	cd 3rd/luasocket; $(MAKE) LUAINC_linux=../../../$(LUA_INC) LUAV=5.3 && cd ../.. && mkdir $(LUA_CLIB_PATH)/socket && cp 3rd/luasocket/src/socket-3.0-rc1.so $(LUA_CLIB_PATH)/socket/core.so \
+  && mkdir $(LUA_CLIB_PATH)/mime && cp 3rd/luasocket/src/mime-1.0.3.so $(LUA_CLIB_PATH)/mime/core.so \
 	&& mkdir $(LUA_LIB_PATH)/socket && cp 3rd/luasocket/src/ftp.lua 3rd/luasocket/src/headers.lua 3rd/luasocket/src/http.lua 3rd/luasocket/src/smtp.lua 3rd/luasocket/src/tp.lua 3rd/luasocket/src/url.lua $(LUA_LIB_PATH)/socket \
 	&& cp 3rd/luasocket/src/socket.lua 3rd/luasocket/src/mime.lua 3rd/luasocket/src/ltn12.lua $(LUA_LIB_PATH)
 
