@@ -53,7 +53,7 @@ all :
 CSERVICE = snlua logger gate harbor
 LUA_CLIB = skynet \
   client \
-  bson md5 sproto lpeg $(TLS_MODULE) cjson mosquitto
+  bson md5 sproto lpeg $(TLS_MODULE) cjson mosquitto luasocket
 
 LUA_CLIB_SKYNET = \
   lua-skynet.c lua-seri.c \
@@ -125,6 +125,12 @@ $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 $(LUA_CLIB_PATH)/mosquitto.so : 3rd/lua-mosquitto/lua-mosquitto.c | $(LUA_CLIB_PATH)
 	$(CC) $(CFLAGS) $(SHARED) -I3rd/lua-mosquitto -lmosquitto $^ -o $@ 
 
+$(LUA_CLIB_PATH)/luasocket.so : | $(LUA_CLIB_PATH)
+	cd 3rd/luasocket; $(MAKE) LUAINC_linux=../../$(LUA_INC) && cd ../.. && mkdir $(LUA_CLIB_PATH)/socket && mv 3rd/luasocket/src/socket-3.0-rc1.so $(LUA_CLIB_PATH)/socket/core.so \
+  && mkdir $(LUA_CLIB_PATH)/mime && mv 3rd/luasocket/src/mime-1.0.3.so $(LUA_CLIB_PATH)/mime/core.so \
+	&& mkdir $(LUA_LIB_PATH)/socket && cp 3rd/luasocket/src/ftp.lua 3rd/luasocket/src/headers.lua 3rd/luasocket/src/http.lua 3rd/luasocket/src/smtp.lua 3rd/luasocket/src/tp.lua 3rd/luasocket/src/url.lua $(LUA_LIB_PATH)/socket \
+	&& cp 3rd/luasocket/src/socket.lua 3rd/luasocket/src/mime.lua 3rd/luasocket/src/ltn12.lua $(LUA_LIB_PATH)
+
 clean :
 	rm -f $(SKYNET_BUILD_PATH)/skynet $(CSERVICE_PATH)/*.so $(LUA_CLIB_PATH)/*.so
 
@@ -135,5 +141,10 @@ endif
 	cd 3rd/lua && $(MAKE) clean
 	cd 3rd/lua-cjson && $(MAKE) clean
 	cd 3rd/lua-mosquitto && $(MAKE) clean
-	rm -rf $(LUA_LIB_PATH)/cjson $(LUA_LIB_PATH)/json2lua.lua $(LUA_LIB_PATH)/lua2json.lua 
+	cd 3rd/luasocket && $(MAKE) clean
+	rm -rf $(LUA_LIB_PATH)/socket
+	rm -rf $(LUA_CLIB_PATH)/socket
+	rm -rf $(LUA_CLIB_PATH)/mime
+	rm -rf $(LUA_LIB_PATH)/cjson $(LUA_LIB_PATH)/json2lua.lua $(LUA_LIB_PATH)/lua2json.lua
+	rm -rf $(LUA_LIB_PATH)/mime.lua $(LUA_LIB_PATH)/ltn12.lua $(LUA_LIB_PATH)/socket.lua
 	rm -f $(LUA_STATICLIB)
