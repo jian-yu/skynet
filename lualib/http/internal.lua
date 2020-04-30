@@ -158,12 +158,12 @@ function M.request(interface, method, host, url, recvheader, header, content)
 		header_content = string.format("host:%s\r\n",host)
 	end
 
-	if content then
-		local data = string.format("%s %s HTTP/1.1\r\n%scontent-length:%d\r\n\r\n", method, url, header_content, #content)
+	if content and content ~= "" then
+		local data = string.format("%s %s HTTP/1.1\r\n%scontent-length: %d\r\n\r\n", method, url, header_content, #content)
 		write(data)
 		write(content)
 	else
-		local request_header = string.format("%s %s HTTP/1.1\r\n%scontent-length:0\r\n\r\n", method, url, header_content)
+		local request_header = string.format("%s %s HTTP/1.1\r\n%scontent-length: 0\r\n\r\n", method, url, header_content)
 		write(request_header)
 	end
 

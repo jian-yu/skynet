@@ -125,8 +125,10 @@ local function writeall(writefunc, statuscode, bodyfunc, header)
 	end
 	local t = type(bodyfunc)
 	if t == "string" then
-		writefunc(string.format("content-length: %d\r\n\r\n", #bodyfunc))
-		writefunc(bodyfunc)
+		if not (header or header["content-length"]) then
+			writefunc(string.format("content-length: %d\r\n", #bodyfunc))
+		end
+		writefunc(string.format("\r\n%s",bodyfunc))
 	elseif t == "function" then
 		writefunc("transfer-encoding: chunked\r\n")
 		while true do
