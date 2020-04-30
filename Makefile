@@ -29,7 +29,7 @@ TLS_INC=
 # JEMALLOC_STATICLIB := 3rd/jemalloc/lib/libjemalloc_pic.a
 # JEMALLOC_INC := 3rd/jemalloc/include/jemalloc
 
-all : 
+all : cleanall
 	
 .PHONY : #jemalloc update3rd
 
