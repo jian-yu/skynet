@@ -152,10 +152,10 @@ function M.request(interface, method, host, url, recvheader, header, content)
 			header.host = host
 		end
 		for k,v in pairs(header) do
-			header_content = string.format("%s%s:%s\r\n", header_content, k, v)
+			header_content = string.format("%s%s: %s\r\n", header_content, k, v)
 		end
 	else
-		header_content = string.format("host:%s\r\n",host)
+		header_content = string.format("host: %s\r\n",host)
 	end
 
 	if content and content ~= "" then
