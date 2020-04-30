@@ -133,7 +133,7 @@ $(LUA_CLIB_PATH)/luasocket.so : | $(LUA_CLIB_PATH)
 	&& cp 3rd/luasocket/src/socket.lua 3rd/luasocket/src/mime.lua 3rd/luasocket/src/ltn12.lua $(LUA_LIB_PATH)
 
 $(LUA_CLIB_PATH)/luasec.so : | $(LUA_CLIB_PATH)
-	cd 3rd/luasec; $(MAKE) linux LUAPATH=$(LUA_LIB_PATH) LUACPATH=$(LUA_CLIB_PATH) \
+	cd 3rd/luasec; $(MAKE) linux LUAPATH=$(LUA_LIB_PATH) LUACPATH=$(LUA_CLIB_PATH) INC_PATH= LIB_PATH= \
 	&& cd ../.. && cp 3rd/luasec/src/ssl.so $(LUA_CLIB_PATH) \
 	&& mkdir $(LUA_LIB_PATH)/ssl && cp 3rd/luasec/src/https.lua $(LUA_LIB_PATH)/ssl \
 	&& cp 3rd/luasec/src/ssl.lua 3rd/luasec/src/options.lua $(LUA_LIB_PATH)
