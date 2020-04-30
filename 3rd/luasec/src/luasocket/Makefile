@@ -14,7 +14,7 @@ RANLIB	?= ranlib
 all: libluasocket.a
 
 libluasocket.a: $(OBJS)
-	$(AR) rcu $@ $(OBJS)
+	$(AR) rv $@ $(OBJS)
 	$(RANLIB) $@
 
 clean:
