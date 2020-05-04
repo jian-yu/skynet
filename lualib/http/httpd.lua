@@ -125,7 +125,7 @@ local function writeall(writefunc, statuscode, bodyfunc, header)
 	end
 	local t = type(bodyfunc)
 	if t == "string" then
-		if not (header or header["content-length"]) then
+		if not (header and header["content-length"]) then
 			writefunc(string.format("content-length: %d\r\n", #bodyfunc))
 		end
 		writefunc(string.format("\r\n%s",bodyfunc))
