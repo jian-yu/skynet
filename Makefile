@@ -16,7 +16,7 @@ LUA_LIB ?= $(LUA_STATICLIB)
 LUA_INC ?= 3rd/lua
 
 $(LUA_STATICLIB) :
-	cd 3rd/lua && $(MAKE) CC='$(CC) -std=gnu99' linux
+	cd 3rd/lua && $(MAKE) CC='$(CC) -std=gnu99'
 
 # https : turn on TLS_MODULE to add https support
 
@@ -53,7 +53,7 @@ all : cleanall
 CSERVICE = snlua logger gate harbor
 LUA_CLIB = skynet \
   client \
-  bson md5 sproto lpeg $(TLS_MODULE) cjson mosquitto luasocket luasec
+  bson md5 sproto lpeg $(TLS_MODULE) cjson luasocket luasec
 
 LUA_CLIB_SKYNET = \
   lua-skynet.c lua-seri.c \
@@ -122,9 +122,6 @@ $(LUA_CLIB_PATH)/lpeg.so : 3rd/lpeg/lpcap.c 3rd/lpeg/lpcode.c 3rd/lpeg/lpprint.c
 $(LUA_CLIB_PATH)/cjson.so : | $(LUA_CLIB_PATH)
 	cd 3rd/lua-cjson && $(MAKE) LUA_INCLUDE_DIR=../../$(LUA_INC) CC=$(CC) CJSON_LDFLAGS="$(SHARED)" && cd ../.. && cp 3rd/lua-cjson/cjson.so $@ && cp -r 3rd/lua-cjson/lua/* $(LUA_LIB_PATH)
 
-$(LUA_CLIB_PATH)/mosquitto.so : 3rd/lua-mosquitto/lua-mosquitto.c | $(LUA_CLIB_PATH)
-	$(CC) $(CFLAGS) $(SHARED) -I3rd/lua-mosquitto -lmosquitto $^ -o $@ 
-
 $(LUA_CLIB_PATH)/luasocket.so : | $(LUA_CLIB_PATH)
 	cd 3rd/luasocket; $(MAKE) LUAINC_linux=../../../$(LUA_INC) LUAV=5.3 && cd ../.. && mkdir $(LUA_CLIB_PATH)/socket && cp 3rd/luasocket/src/socket-3.0-rc1.so $(LUA_CLIB_PATH)/socket/core.so \
 	&& cp 3rd/luasocket/src/serial.so $(LUA_CLIB_PATH)/socket && cp 3rd/luasocket/src/unix.so $(LUA_CLIB_PATH)/socket \
@@ -147,7 +144,6 @@ ifneq (,$(wildcard 3rd/jemalloc/Makefile))
 endif
 	cd 3rd/lua && $(MAKE) clean
 	cd 3rd/lua-cjson && $(MAKE) clean
-	cd 3rd/lua-mosquitto && $(MAKE) clean
 	cd 3rd/luasocket && $(MAKE) clean
 	cd 3rd/luasec && $(MAKE) clean
 	rm -rf $(LUA_LIB_PATH)/socket
